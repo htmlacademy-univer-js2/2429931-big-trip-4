@@ -12,6 +12,9 @@ module.exports = {
   devtool: 'source-map',
   plugins: [
     new HtmlPlugin({
+      template: 'public/index.html',
+    }),
+    new CopyPlugin({
       patterns: [
         {
           from: 'public',
