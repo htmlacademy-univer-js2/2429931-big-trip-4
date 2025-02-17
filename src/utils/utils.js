@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 const getOfferGivenPointType = (point, offers) => offers.find((o) => o.type === point.type);
 
-const getDestination = (point, description) => description.find((d) => d.id === point.destination);
+const getDestinationGivenPointType = (point, descriptions) => descriptions.find((d) => d.id === point.destination);
 
 const getFormatDate = (date, newFormatDate) => dayjs(date).format(newFormatDate);
 
@@ -27,4 +27,4 @@ const getDiffDate = (start, end) => {
   return result;
 };
 
-export {getOfferGivenPointType, getDestination, getFormatDate, getDiffDate};
+export {getOfferGivenPointType, getDestinationGivenPointType, getFormatDate, getDiffDate};

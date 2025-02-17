@@ -17,7 +17,7 @@ const mockDestinations = [
 const mockOffers = [
   {
     type: 'Taxi',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'Upgrade to a business class',
@@ -32,7 +32,7 @@ const mockOffers = [
   },
   {
     type: 'Flight',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'B to a business class',
@@ -42,7 +42,7 @@ const mockOffers = [
   },
   {
     type: 'Bus',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'C to a business class',

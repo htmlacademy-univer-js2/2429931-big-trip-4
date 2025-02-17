@@ -14,16 +14,16 @@ export default class RoutePointListPresenter {
   pointListComponent = new RoutePointListView();
 
   init(){
-    this.point = this.pointModel.getPoints();
-    this.offer = this.pointModel.getOffers();
-    this.destination = this.pointModel.getDestinations();
+    this.points = this.pointModel.getPoints();
+    this.offers = this.pointModel.getOffers();
+    this.destinations = this.pointModel.getDestinations();
 
     render(new SortView(), this.tripEvents);
     render(this.pointListComponent, this.tripEvents);
-    render(new EditFormView({point: this.point[0], offer: this.offer, destination: this.destination}), this.pointListComponent.getElement());
+    render(new EditFormView({point: this.points[0], offers: this.offers, destinations: this.destinations}), this.pointListComponent.getElement());
 
-    this.point.forEach((element) => {
-      render(new RoutePointView({point: element, offer: this.offer, destination: this.destination}), this.pointListComponent.getElement());
+    this.points.forEach((element) => {
+      render(new RoutePointView({point: element, offers: this.offers, destinations: this.destinations}), this.pointListComponent.getElement());
     });
 
     render(new CreateFormView, this.pointListComponent.getElement());

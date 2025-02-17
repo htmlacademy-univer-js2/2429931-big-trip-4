@@ -1,9 +1,9 @@
 import { createElement } from '../render';
-import { getDestination, getOfferGivenPointType, getFormatDate } from '../utils/utils';
+import { getOfferGivenPointType, getFormatDate, getDestinationGivenPointType } from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 
-function createOfferTemplate(offers){
-  const {id, price, title} = offers;
+function createOfferTemplate(option){
+  const {id, price, title} = option;
 
   return`
     <div class="event__offer-selector">
@@ -17,7 +17,7 @@ function createOfferTemplate(offers){
   `;
 }
 
-function createEditFormTemplate(point, destination, offer) {
+function createEditFormTemplate(point, destinations, offers) {
   const {type, basePrice, dateFrom, dateTo} = point;
 
   return `
@@ -86,9 +86,9 @@ function createEditFormTemplate(point, destination, offer) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestination(point, destination).name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestinationGivenPointType(point, destinations).name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              ${destination.map((dest) => `<option value="${dest.name}">${dest.name}</option>`)}
+              ${destinations.map((dest) => `<option value="${dest.name}">${dest.name}</option>`)}
             </datalist>
           </div>
 
@@ -118,13 +118,13 @@ function createEditFormTemplate(point, destination, offer) {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-              ${getOfferGivenPointType(point,offer)?.offers.map((o) => createOfferTemplate(o)).join('')}
+              ${getOfferGivenPointType(point, offers)?.options.map((o) => createOfferTemplate(o)).join('')}
             </div>
           </section>
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${getDestination(point, destination)?.description}</p>
+            <p class="event__destination-description">${getDestinationGivenPointType(point, destinations)?.description}</p>
           </section>
         </section>
       </form>
@@ -133,14 +133,14 @@ function createEditFormTemplate(point, destination, offer) {
 }
 
 export default class EditFormView{
-  constructor({point, offer, destination}){
+  constructor({point, offers, destinations}){
     this.point = point;
-    this.offer = offer;
-    this.destination = destination;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate(){
-    return createEditFormTemplate(this.point, this.destination, this.offer);
+    return createEditFormTemplate(this.point, this.destinations, this.offers);
   }
 
   getElement(){
