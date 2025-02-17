@@ -1,5 +1,5 @@
 
-const mockDestination = [
+const mockDestinations = [
   {
     id: 1,
     description: 'Beautiful city with historic sites',
@@ -85,4 +85,4 @@ const mockRoutePoints = [
   }
 ];
 
-export {mockRoutePoints, mockDestination, mockOffers};
+export {mockRoutePoints, mockDestinations, mockOffers};

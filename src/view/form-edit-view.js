@@ -1,14 +1,14 @@
 import { createElement } from '../render';
-import { getDestination, getOffers, getFormatDate } from '../utils/utils';
+import { getDestination, getOfferGivenPointType, getFormatDate } from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 
 function createOfferTemplate(offers){
-  const {price, title} = offers;
+  const {id, price, title} = offers;
 
   return`
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-luggage-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage">
+      <label class="event__offer-label" for="event-offer-luggage-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${price}</span>
@@ -118,7 +118,7 @@ function createEditFormTemplate(point, destination, offer) {
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-              ${getOffers(point,offer)?.offers.map((o) => createOfferTemplate(o)).join('')}
+              ${getOfferGivenPointType(point,offer)?.offers.map((o) => createOfferTemplate(o)).join('')}
             </div>
           </section>
 

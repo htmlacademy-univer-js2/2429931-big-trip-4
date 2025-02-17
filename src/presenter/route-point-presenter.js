@@ -22,9 +22,9 @@ export default class RoutePointListPresenter {
     render(this.pointListComponent, this.tripEvents);
     render(new EditFormView({point: this.point[0], offer: this.offer, destination: this.destination}), this.pointListComponent.getElement());
 
-    for (let i = 0; i < 3; i++){
-      render(new RoutePointView({point: this.point[i], offer: this.offer, destination: this.destination}), this.pointListComponent.getElement());
-    }
+    this.point.forEach((element) => {
+      render(new RoutePointView({point: element, offer: this.offer, destination: this.destination}), this.pointListComponent.getElement());
+    });
 
     render(new CreateFormView, this.pointListComponent.getElement());
   }

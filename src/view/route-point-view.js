@@ -1,5 +1,5 @@
 import { createElement } from '../render';
-import { getDestination, getOffers, getFormatDate, getDiffDate } from '../utils/utils';
+import { getDestination, getOfferGivenPointType, getFormatDate, getDiffDate } from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 
 function createOfferList(offers){
@@ -41,7 +41,7 @@ function createRoutePoint(point, destination, offer) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-           ${getOffers(point, offer).offers.map((o) => createOfferList(o)).join('')}
+           ${getOfferGivenPointType(point, offer).offers.map((o) => createOfferList(o)).join('')}
         </ul>
         <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>

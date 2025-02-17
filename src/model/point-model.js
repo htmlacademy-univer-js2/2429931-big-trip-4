@@ -1,10 +1,10 @@
-import { mockRoutePoints, mockOffers, mockDestination } from '../mock/task';
+import { mockRoutePoints, mockOffers, mockDestinations } from '../mock/task';
 
 export default class PointModel{
   constructor() {
     this.point = mockRoutePoints;
     this.offer = mockOffers;
-    this.destination = mockDestination;
+    this.destination = mockDestinations;
   }
 
   getPoints(){
