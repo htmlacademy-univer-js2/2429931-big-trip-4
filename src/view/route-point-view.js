@@ -1,10 +1,9 @@
 import { createElement } from '../render';
-import { getDestination, getOffers, getFormatDate, getDiffDate } from '../utils/utils';
+import { getDestinationGivenPointType, getOfferGivenPointType, getFormatDate, getDiffDate} from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 
-function createOfferList(offers){
-  // const {type, offers} = offer;
-  const {price, title} = offers;
+function createOfferList(option){
+  const {price, title} = option;
 
   return`
     <li class="event__offer">
@@ -15,7 +14,7 @@ function createOfferList(offers){
   `;
 }
 
-function createRoutePoint(point, destination, offer) {
+function createRoutePoint(point, destinations, offers) {
   const {type, basePrice, dateFrom, dateTo} = point;
   const startTime = getFormatDate(dateFrom, FORMAT_DATE.time);
   const endTime = getFormatDate(dateTo, FORMAT_DATE.time);
@@ -27,7 +26,7 @@ function createRoutePoint(point, destination, offer) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${getDestination(point, destination).name}</h3>
+        <h3 class="event__title">${type} ${getDestinationGivenPointType(point, destinations).name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${dateFrom}">${startTime}</time>
@@ -41,7 +40,7 @@ function createRoutePoint(point, destination, offer) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-           ${getOffers(point, offer).offers.map((o) => createOfferList(o)).join('')}
+           ${getOfferGivenPointType(point, offers).options.map((o) => createOfferList(o)).join('')}
         </ul>
         <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -58,14 +57,14 @@ function createRoutePoint(point, destination, offer) {
 }
 
 export default class RoutePointView{
-  constructor({point, offer, destination}){
+  constructor({point, offers, destinations}){
     this.point = point;
-    this.offer = offer;
-    this.destination = destination;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate(){
-    return createRoutePoint(this.point, this.destination, this.offer);
+    return createRoutePoint(this.point, this.destinations, this.offers);
   }
 
   getElement(){

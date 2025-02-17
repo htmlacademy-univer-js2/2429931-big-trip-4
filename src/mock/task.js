@@ -1,5 +1,5 @@
 
-const mockDestination = [
+const mockDestinations = [
   {
     id: 1,
     description: 'Beautiful city with historic sites',
@@ -17,7 +17,7 @@ const mockDestination = [
 const mockOffers = [
   {
     type: 'Taxi',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'Upgrade to a business class',
@@ -32,7 +32,7 @@ const mockOffers = [
   },
   {
     type: 'Flight',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'B to a business class',
@@ -42,7 +42,7 @@ const mockOffers = [
   },
   {
     type: 'Bus',
-    offers: [
+    options: [
       {
         id: 1,
         title: 'C to a business class',
@@ -85,4 +85,4 @@ const mockRoutePoints = [
   }
 ];
 
-export {mockRoutePoints, mockDestination, mockOffers};
+export {mockRoutePoints, mockDestinations, mockOffers};
