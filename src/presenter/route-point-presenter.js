@@ -1,31 +1,65 @@
 import SortView from '../view/sort-view.js';
 import RoutePointListView from '../view/route-point-list-view.js';
-import { render } from '../render.js';
-import RoutePointView from '../view/route-point-view';
-import CreateFormView from '../view/form-create-view.js';
+import { render, replace } from '../framework/render.js';
 import EditFormView from '../view/form-edit-view.js';
+import RoutePointView from '../view/route-point-view';
 
 export default class RoutePointListPresenter {
+  #pointModel = null;
+  #tripEvents = null;
+
+  #pointListComponent = new RoutePointListView();
+
+  #points = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({pointModel, tripEvents}){
-    this.pointModel = pointModel;
-    this.tripEvents = tripEvents;
+    this.#pointModel = pointModel;
+    this.#tripEvents = tripEvents;
   }
 
-  pointListComponent = new RoutePointListView();
-
   init(){
-    this.points = this.pointModel.getPoints();
-    this.offers = this.pointModel.getOffers();
-    this.destinations = this.pointModel.getDestinations();
+    this.#points = this.#pointModel.points;
+    this.#offers = this.#pointModel.offers;
+    this.#destinations = this.#pointModel.destinations;
 
-    render(new SortView(), this.tripEvents);
-    render(this.pointListComponent, this.tripEvents);
-    render(new EditFormView({point: this.points[0], offers: this.offers, destinations: this.destinations}), this.pointListComponent.getElement());
+    render(new SortView(), this.#tripEvents);
+    render(this.#pointListComponent, this.#tripEvents);
 
-    this.points.forEach((element) => {
-      render(new RoutePointView({point: element, offers: this.offers, destinations: this.destinations}), this.pointListComponent.getElement());
+    this.#points.forEach((element) => {
+      this.#renderPoint(element);
+    });
+  }
+
+  #renderPoint(point){
+    const onEscKeydown = (event) => {
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        event.preventDefault();
+
+        replaceEditOnPoint();
+      }
+    };
+
+    const editForm = new EditFormView({point, destinations: this.#destinations, offers: this.#offers,
+      onClickSubmit: replaceEditOnPoint,
+      onClickBtnRoll: replaceEditOnPoint
     });
 
-    render(new CreateFormView, this.pointListComponent.getElement());
+    const pointItem = new RoutePointView({point, destinations: this.#destinations, offers: this.#offers,
+      onClickBtnRoll: replacePointOnEdit
+    });
+
+    function replacePointOnEdit() {
+      replace(editForm, pointItem);
+      document.addEventListener('keydown', onEscKeydown);
+    }
+
+    function replaceEditOnPoint() {
+      replace(pointItem, editForm);
+      document.removeEventListener('keydown', onEscKeydown);
+    }
+
+    render(pointItem, this.#pointListComponent.element);
   }
 }
