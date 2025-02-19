@@ -1,6 +1,6 @@
-import { createElement } from '../render';
 import { getDestinationGivenPointType, getOfferGivenPointType, getFormatDate, getDiffDate} from '../utils/utils';
 import { FORMAT_DATE } from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferList(option){
   const {price, title} = option;
@@ -56,25 +56,24 @@ function createRoutePoint(point, destinations, offers) {
   `;
 }
 
-export default class RoutePointView{
-  constructor({point, offers, destinations}){
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class RoutePointView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
+  constructor({point, offers, destinations, onClickBtnRoll}){
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
+      event.preventDefault();
+      onClickBtnRoll();
+    });
   }
 
-  getTemplate(){
-    return createRoutePoint(this.point, this.destinations, this.offers);
-  }
-
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  deleteElement() {
-    this.element = null;
+  get template(){
+    return createRoutePoint(this.#point, this.#destinations, this.#offers);
   }
 }

@@ -1,6 +1,6 @@
-import { createElement } from '../render';
 import { getOfferGivenPointType, getFormatDate, getDestinationGivenPointType } from '../utils/utils';
 import { FORMAT_DATE } from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferTemplate(option){
   const {id, price, title} = option;
@@ -132,25 +132,25 @@ function createEditFormTemplate(point, destinations, offers) {
   `;
 }
 
-export default class EditFormView{
-  constructor({point, offers, destinations}){
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class EditFormView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
+  constructor({point, offers, destinations, onClickSubmit, onClickBtnRoll}){
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
+      event.preventDefault();
+      onClickBtnRoll();
+    });
+    this.element.querySelector('.event__save-btn').addEventListener('submit', onClickSubmit);
   }
 
-  getTemplate(){
-    return createEditFormTemplate(this.point, this.destinations, this.offers);
-  }
-
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  deleteElement() {
-    this.element = null;
+  get template(){
+    return createEditFormTemplate(this.#point, this.#destinations, this.#offers);
   }
 }

@@ -1,5 +1,5 @@
 import FilterView from '../src/view/filter-view.js';
-import { render } from './render.js';
+import { render } from './framework/render.js';
 import RoutePointListPresenter from './presenter/route-point-presenter.js';
 import PointModel from './model/point-model.js';
 
