@@ -16,4 +16,9 @@ const FORMAT_DATE = {
   time: 'h:mm',
 };
 
-export {TYPES_POINT, FORMAT_DATE};
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export {TYPES_POINT, FORMAT_DATE, Mode};
