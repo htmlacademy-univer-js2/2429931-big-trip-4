@@ -1,8 +1,10 @@
 import dayjs from 'dayjs';
 
-const getOfferGivenPointType = (point, offers) => offers.find((o) => o.type === point.type);
+const getOfferGivenPointType = (point, offers) => offers.find((o) => o.type.toLowerCase() === point.type.toLowerCase());
 
 const getDestinationGivenPointType = (point, descriptions) => descriptions.find((d) => d.id === point.destination);
+
+const getDestinationId = (evt, destinations) => destinations.find((d) => d.name.toLowerCase() === evt.toLowerCase());
 
 const getFormatDate = (date, newFormatDate) => dayjs(date).format(newFormatDate);
 
@@ -27,4 +29,6 @@ const getDiffDate = (start, end) => {
   return result;
 };
 
-export {getOfferGivenPointType, getDestinationGivenPointType, getFormatDate, getDiffDate};
+const pointTypeIsChecked = (typeCheckbox, typePoint) => typeCheckbox === typePoint.toLowerCase() ? 'checked' : '';
+
+export {getOfferGivenPointType, getDestinationGivenPointType, getDestinationId, getFormatDate, getDiffDate, pointTypeIsChecked};

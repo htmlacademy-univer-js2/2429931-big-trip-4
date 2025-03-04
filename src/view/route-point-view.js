@@ -2,15 +2,18 @@ import { getDestinationGivenPointType, getOfferGivenPointType, getFormatDate, ge
 import { FORMAT_DATE } from '../const';
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createOfferList(option){
-  const {price, title} = option;
-
-  return`
+function createOfferList(option, point){
+  const {id,price, title} = option;
+  if(point.offers.indexOf(id) !== -1){
+    return`
     <li class="event__offer">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
     </li>
+  `;
+  }
+  return`
   `;
 }
 
@@ -40,7 +43,7 @@ function createRoutePoint(point, destinations, offers) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-           ${getOfferGivenPointType(point, offers).options.map((o) => createOfferList(o)).join('')}
+           ${getOfferGivenPointType(point, offers)?.options.map((o) => createOfferList(o, point)).join('')}
         </ul>
         <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -60,24 +63,24 @@ export default class RoutePointView extends AbstractView{
   #point = null;
   #offers = null;
   #destinations = null;
-  #onClickBtnRoll = null;
-  #onHandleFavoriteClick = null;
+  #onBtnRollClick = null;
+  #onFavoriteClick = null;
 
-  constructor({point, offers, destinations, onClickBtnRoll, onFavoriteClick}){
+  constructor({point, offers, destinations, onBtnRollClick, onFavoriteClick}){
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#onClickBtnRoll = onClickBtnRoll;
-    this.#onHandleFavoriteClick = onFavoriteClick;
+    this.#onBtnRollClick = onBtnRollClick;
+    this.#onFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
       event.preventDefault();
-      onClickBtnRoll();
+      this.#onBtnRollClick();
     });
     this.element.querySelector('.event__favorite-btn').addEventListener('click', (event) =>{
       event.preventDefault();
-      this.#onHandleFavoriteClick();
+      this.#onFavoriteClick();
     });
   }
 

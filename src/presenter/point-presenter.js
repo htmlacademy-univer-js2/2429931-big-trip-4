@@ -35,15 +35,15 @@ export default class PointPresenter{
       point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onClickSubmit: this.#replaceEditOnPoint,
-      onClickBtnRoll: this.#replaceEditOnPoint
+      onSubmitClick: this.#replaceEditOnPoint,
+      onBtnRollClick: this.#replaceEditOnPoint
     });
 
     this.#pointItemComponent = new RoutePointView({
       point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onClickBtnRoll: this.#replacePointOnEdit,
+      onBtnRollClick: this.#replacePointOnEdit,
       onFavoriteClick: this.#onHandleFavoriteClick
     });
 
@@ -65,6 +65,11 @@ export default class PointPresenter{
 
   }
 
+  destroy() {
+    remove(this.#pointItemComponent);
+    remove(this.#editFormComponent);
+  }
+
   #onHandleFavoriteClick = () => {
     this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };
@@ -72,6 +77,7 @@ export default class PointPresenter{
   #onEscKeydown = (event) => {
     if (event.key === 'Escape' || event.keyCode === 27) {
       event.preventDefault();
+      this.#editFormComponent.reset(this.#point);
       this.#replaceEditOnPoint();
     }
   };
@@ -79,6 +85,7 @@ export default class PointPresenter{
   #replacePointOnEdit = () => {
     replace(this.#editFormComponent, this.#pointItemComponent);
     document.addEventListener('keydown', this.#onEscKeydown);
+    this.#editFormComponent.reset(this.#point);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   };
@@ -91,6 +98,7 @@ export default class PointPresenter{
 
   resetView(){
     if(this.#mode !== Mode.DEFAULT){
+      this.#editFormComponent.reset(this.#point);
       this.#replaceEditOnPoint();
     }
   }
