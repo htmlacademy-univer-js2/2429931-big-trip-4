@@ -1,4 +1,4 @@
-import { getOfferGivenPointType, getFormatDate, getDestinationGivenPointType, getDestinationId,pointTypeIsChecked } from '../utils/utils';
+import { getOfferGivenPointType, getFormatDate, getDestinationGivenPointType, getDestinationByPoint,pointTypeIsChecked } from '../utils/utils';
 import { FORMAT_DATE, TYPES_POINT } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
@@ -7,11 +7,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 function createOfferTemplate(option, point){
   const {id, price, title} = option;
-  let checkedAtribute = '';
+  const checkedAtribute = (point.offers.includes(id)) ? 'checked' : '';
 
-  if(point.offers.indexOf(id) !== -1){
-    checkedAtribute = 'checked';
-  }
   return`
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${checkedAtribute}>
@@ -27,8 +24,7 @@ function createOfferTemplate(option, point){
 function createSectionOffers(point, offers){
   const givenOffer = getOfferGivenPointType(point, offers);
   if(givenOffer === undefined){
-    return `
-    `;
+    return '';
   }
   return`
   <section class="event__section  event__section--offers">
@@ -41,9 +37,8 @@ function createSectionOffers(point, offers){
 
 function createSectionDestinations(point, destinations){
   const givenDestination = getDestinationGivenPointType(point, destinations);
-  if(givenDestination === undefined || givenDestination?.description === undefined || givenDestination?.description.trim().length === 0){
-    return `
-    `;
+  if(!givenDestination?.description?.trim?.()?.length){
+    return '';
   }
   let givenPictures = '';
   if(givenDestination?.pictures.length !== 0){
@@ -181,8 +176,6 @@ export default class EditFormView extends AbstractStatefulView{
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
     this.element.querySelector('[name=event-start-time]').addEventListener('input', this.#timeStartInputHandler);
     this.element.querySelector('[name=event-end-time]').addEventListener('input', this.#timeEndInputHandler);
-
-    this.element.querySelector('.event__save-btn').addEventListener('submit', this.#onSubmitClick);
   }
 
   #timeStartInputHandler = (evt) => {
@@ -202,18 +195,40 @@ export default class EditFormView extends AbstractStatefulView{
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    const newDestination = getDestinationId(evt.target.value, this.#destinations);
+    const newDestination = getDestinationByPoint(evt.target.value, this.#destinations);
     const newDestinationId = newDestination ? newDestination.id : null;
-    this._setState({
-      destination: newDestinationId,
-    });
+    if(newDestinationId !== null){
+      this.updateElement({
+        destination: newDestinationId ,
+      });
+    } else {
+      this.#isDisabled('.event__input--destination', true, '1px solid red');
+    }
   };
 
   #priceInputHandler = (evt) => {
     evt.preventDefault();
-    this._setState({
-      basePrice: evt.target.value
-    });
+    if(/^\d*[1-9]\d*$/.test(evt.target.value)){
+      this._setState({
+        basePrice: evt.target.value
+      });
+      this.#isDisabled('.event__input--price', false, 'none');
+    } else {
+      this.#isDisabled('.event__input--price', true, '1px solid red');
+    }
+  };
+
+  #isDisabled = (inputPlace, flag, styleBorder) => {
+    if(inputPlace === '.event__input--price'){
+      this.element.querySelector('.event__input--destination').disabled = flag;
+    } else if(inputPlace === '.event__input--destination'){
+      this.element.querySelector('.event__input--price').disabled = flag;
+    }
+    this.element.querySelector(inputPlace).style.border = styleBorder;
+    this.element.querySelector('.event__save-btn').disabled = flag;
+    this.element.querySelector('[name="event-start-time"]').disabled = flag;
+    this.element.querySelector('[name="event-end-time"]').disabled = flag;
+    this.element.querySelector('.event__type-group').disabled = flag;
   };
 
   #typeChangeHandler = (evt) => {

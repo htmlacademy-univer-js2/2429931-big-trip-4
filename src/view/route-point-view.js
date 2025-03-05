@@ -4,7 +4,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferList(option, point){
   const {id,price, title} = option;
-  if(point.offers.indexOf(id) !== -1){
+  if(point.offers.includes(id)){
     return`
     <li class="event__offer">
       <span class="event__offer-title">${title}</span>
@@ -13,8 +13,7 @@ function createOfferList(option, point){
     </li>
   `;
   }
-  return`
-  `;
+  return '';
 }
 
 function createRoutePoint(point, destinations, offers) {
