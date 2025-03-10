@@ -11,7 +11,7 @@ function createOfferTemplate(option, point){
 
   return`
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${checkedAtribute}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage-${id}" ${checkedAtribute}>
       <label class="event__offer-label" for="event-offer-luggage-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
@@ -171,7 +171,7 @@ export default class EditFormView extends AbstractStatefulView{
   _restoreHandlers(){
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollButtonHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
     this.element.querySelector('[name=event-start-time]').addEventListener('input', this.#timeStartInputHandler);
@@ -179,6 +179,20 @@ export default class EditFormView extends AbstractStatefulView{
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
+
+  #offersHandler = (evt) => {
+    evt.preventDefault();
+    const clickedOfferId = Number(evt.target.name.split('-').at(-1));
+    const newOffersIds = this._state.offers;
+    if (newOffersIds.includes(clickedOfferId)) {
+      newOffersIds.splice(newOffersIds.indexOf(clickedOfferId), 1);
+    } else {
+      newOffersIds.push(clickedOfferId);
+    }
+    this._setState({
+      offersIDs: newOffersIds
+    });
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();

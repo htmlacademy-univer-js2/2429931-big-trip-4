@@ -42,7 +42,7 @@ function createRoutePoint(point, destinations, offers) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-           ${getOfferGivenPointType(point, offers)?.options.map((o) => createOfferList(o, point)).join('')}
+           ${getOfferGivenPointType(point, offers) !== undefined ? getOfferGivenPointType(point, offers)?.options.map((o) => createOfferList(o, point)).join('') : ''}
         </ul>
         <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>
