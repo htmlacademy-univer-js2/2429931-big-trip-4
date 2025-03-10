@@ -2,8 +2,19 @@ import { getOfferGivenPointType, getFormatDate, getDestinationGivenPointType, ge
 import { FORMAT_DATE, TYPES_POINT } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
-
 import 'flatpickr/dist/flatpickr.min.css';
+import {nanoid} from 'nanoid';
+
+const BLANK_POINT = {
+  basePrice: 1,
+  type: 'flight',
+  dateFrom: '2023-07-18T20:20:13.375Z',
+  dateTo: '2023-07-18T21:40:13.375Z',
+  destination: 1,
+  id: nanoid(),
+  offers: [],
+  isFavorite: false
+};
 
 function createOfferTemplate(option, point){
   const {id, price, title} = option;
@@ -132,20 +143,19 @@ export default class EditFormView extends AbstractStatefulView{
   #offers = null;
   #destinations = null;
 
-  #onSubmitClick = null;
-  #onBtnRollClick = null;
+  #handleSubmitClick = null;
+  #handleOnBtnRollClick = null;
   #handleDeleteClick = null;
 
   #datepicker = null;
-  #isSave = null;
 
-  constructor({point, offers, destinations, onSubmitClick, onBtnRollClick, onDeleteClick}){
+  constructor({point = BLANK_POINT, offers, destinations, onSubmitClick, onBtnRollClick, onDeleteClick}){
     super();
     this._setState(EditFormView.parsePointToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#onSubmitClick = onSubmitClick;
-    this.#onBtnRollClick = onBtnRollClick;
+    this.#handleSubmitClick = onSubmitClick;
+    this.#handleOnBtnRollClick = onBtnRollClick;
     this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
@@ -195,13 +205,13 @@ export default class EditFormView extends AbstractStatefulView{
       newOffersIds.push(clickedOfferId);
     }
     this._setState({
-      offersIDs: newOffersIds
+      offers: newOffersIds
     });
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmitClick(EditFormView.parseStateToPoint(this._state));
+    this.#handleSubmitClick(EditFormView.parseStateToPoint(this._state));
   };
 
   #formDeleteClickHandler = (evt) => {
@@ -221,7 +231,7 @@ export default class EditFormView extends AbstractStatefulView{
 
   #rollButtonHandler = (evt) => {
     evt.preventDefault();
-    this.#onBtnRollClick();
+    this.#handleOnBtnRollClick();
   };
 
   #destinationInputHandler = (evt) => {

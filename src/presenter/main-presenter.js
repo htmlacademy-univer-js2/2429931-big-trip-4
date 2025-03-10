@@ -1,31 +1,50 @@
 import SortView from '../view/sort-view.js';
 import RoutePointListView from '../view/route-point-list-view.js';
-import { render } from '../framework/render.js';
+import { render, remove} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
-import { UserAction, UpdateType} from '../const.js';
+import { UserAction, UpdateType, FilterType} from '../const.js';
+import NewPointPresenter from './new-point-presenter.js';
+import {filter} from '../utils/utils.js';
+import NoPointsView from '../view/no-points-view';
 
 export default class RoutePointListPresenter {
   #pointModel = null;
   #tripEvents = null;
+  #filterModel = null;
+
+  #filterType = FilterType.EVERYTHING;
 
   #pointListComponent = new RoutePointListView();
   #sortComponent = new SortView();
+  #noPointComponent = null;
 
   #points = null;
   #offers = null;
   #destinations = null;
 
   #pointPresenters = new Map();
+  #newPointPresenter = null;
 
-  constructor({pointModel, tripEvents}){
+  constructor({pointModel, tripEvents, filterModel, onNewPointDestroy}){
     this.#pointModel = pointModel;
     this.#tripEvents = tripEvents;
+    this.#filterModel = filterModel;
 
     this.#pointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy,
+    });
   }
 
   get points(){
-    return this.#pointModel.points;
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+    return filteredPoints;
   }
 
   init(){
@@ -36,9 +55,19 @@ export default class RoutePointListPresenter {
     this.#renderMain();
   }
 
+  createPoint(){
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init(this.#pointModel.offers, this.#pointModel.destinations);
+  }
+
   #clearPoints(){
+    this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
   }
 
   #handleModelEvent = (updateType, data) => {
@@ -69,18 +98,23 @@ export default class RoutePointListPresenter {
         this.#pointModel.deletePoint(updateType, update);
         break;
     }
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
   };
 
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #renderSort(){
     render(this.#sortComponent, this.#tripEvents);
+  }
+
+  #renderNoPoints() {
+    this.#noPointComponent = new NoPointsView({
+      filterType: this.#filterType
+    });
+
+    render(this.#noPointComponent, this.#tripEvents);
   }
 
   #renderAllPoints(){
@@ -104,6 +138,10 @@ export default class RoutePointListPresenter {
   }
 
   #renderMain (){
+    if (this.points.length === 0) {
+      this.#renderNoPoints();
+      return;
+    }
     this.#renderSort();
     this.#renderAllPoints();
   }

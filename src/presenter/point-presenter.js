@@ -1,8 +1,8 @@
 import EditFormView from '../view/form-edit-view.js';
 import RoutePointView from '../view/route-point-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { Mode } from '../const.js';
-import {UserAction, UpdateType} from '../const.js';
+import { Mode, UserAction, UpdateType } from '../const.js';
+import { isDatesEqual } from '../utils/utils.js';
 
 export default class PointPresenter{
   #pointListComponent = null;
@@ -38,7 +38,7 @@ export default class PointPresenter{
       offers: this.#offers,
       onSubmitClick: this.#hanleSubmitClick,
       onBtnRollClick: this.#replaceEditOnPoint,
-      onDeleteClick: this.#onHandleDeleteClick
+      onDeleteClick: this.#handleDeleteClick
     });
 
     this.#pointItemComponent = new RoutePointView({
@@ -72,7 +72,7 @@ export default class PointPresenter{
     remove(this.#editFormComponent);
   }
 
-  #onHandleDeleteClick = (point) => {
+  #handleDeleteClick = (point) => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
@@ -81,11 +81,10 @@ export default class PointPresenter{
   };
 
   #hanleSubmitClick = (update) => {
-    // const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
+    const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      // isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-      UpdateType.PATCH,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update);
     this.#replaceEditOnPoint();
   };
@@ -93,13 +92,12 @@ export default class PointPresenter{
   #handleFavoriteClick = () => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite});
-    // this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
   #onEscKeydown = (event) => {
-    if (event.key === 'Escape' || event.keyCode === 27) {
+    if (event.key === 'Escape' || event.keyCode === 27 || event.key === 'Esc') {
       event.preventDefault();
       this.#editFormComponent.reset(this.#point);
       this.#replaceEditOnPoint();
