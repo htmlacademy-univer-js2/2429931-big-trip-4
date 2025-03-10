@@ -1,8 +1,8 @@
 import EditFormView from '../view/form-edit-view.js';
 import RoutePointView from '../view/route-point-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { Mode } from '../const.js';
-import {UserAction, UpdateType} from '../const.js';
+import { Mode, UserAction, UpdateType } from '../const.js';
+import { isDatesEqual } from '../utils/utils.js';
 
 export default class PointPresenter{
   #pointListComponent = null;
@@ -81,11 +81,10 @@ export default class PointPresenter{
   };
 
   #hanleSubmitClick = (update) => {
-    // const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
+    const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      // isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-      UpdateType.PATCH,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update);
     this.#replaceEditOnPoint();
   };

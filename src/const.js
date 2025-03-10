@@ -33,4 +33,18 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {TYPES_POINT, FORMAT_DATE, Mode, UserAction, UpdateType};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
+const FilterTypeMessage = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.FUTURE]: 'There are no future events now'
+};
+
+export {TYPES_POINT, FORMAT_DATE, Mode, UserAction, UpdateType, FilterType, FilterTypeMessage};
