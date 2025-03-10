@@ -4,6 +4,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import {nanoid} from 'nanoid';
+import he from 'he';
 
 const BLANK_POINT = {
   basePrice: 1,
@@ -63,7 +64,7 @@ function createSectionDestinations(point, destinations){
   return`
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${givenDestination?.description}</p>
+      <p class="event__destination-description">${he.encode(givenDestination?.description)}</p>
       ${givenPictures}
     </section>
   `;

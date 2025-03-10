@@ -1,6 +1,7 @@
 import { getDestinationGivenPointType, getOfferGivenPointType, getFormatDate, getDiffDate} from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 import AbstractView from '../framework/view/abstract-view.js';
+import he from 'he';
 
 function createOfferList(option, point){
   const {id,price, title} = option;
@@ -38,7 +39,7 @@ function createRoutePoint(point, destinations, offers) {
           <p class="event__duration">${getDiffDate(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(basePrice.toString())}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
