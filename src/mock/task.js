@@ -76,8 +76,8 @@ const mockRoutePoints = [
   {
     id: 3,
     basePrice: 3000,
-    dateFrom: new Date('2023-10-01T10:30:00'),
-    dateTo: new Date('2023-10-01T11:20:00'),
+    dateFrom: new Date('2025-01-11T12:03:00'),
+    dateTo: new Date('2025-10-01T11:20:00'),
     type: 'Bus',
     destination: 2,
     offers: [1],
