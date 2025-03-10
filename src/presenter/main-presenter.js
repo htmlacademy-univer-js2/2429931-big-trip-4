@@ -6,6 +6,7 @@ import { UserAction, UpdateType, FilterType} from '../const.js';
 import NewPointPresenter from './new-point-presenter.js';
 import {filter} from '../utils/utils.js';
 import NoPointsView from '../view/no-points-view';
+import LoadingView from '../view/loading-view.js';
 
 export default class RoutePointListPresenter {
   #pointModel = null;
@@ -13,9 +14,11 @@ export default class RoutePointListPresenter {
   #filterModel = null;
 
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   #pointListComponent = new RoutePointListView();
   #sortComponent = new SortView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
 
   #points = null;
@@ -47,6 +50,14 @@ export default class RoutePointListPresenter {
     return filteredPoints;
   }
 
+  get offers() {
+    return this.#pointModel.offers;
+  }
+
+  get destinations() {
+    return this.#pointModel.destinations;
+  }
+
   init(){
     this.#points = this.#pointModel.points;
     this.#offers = this.#pointModel.offers;
@@ -65,6 +76,7 @@ export default class RoutePointListPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
+    remove(this.#loadingComponent);
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
     }
@@ -79,8 +91,9 @@ export default class RoutePointListPresenter {
         this.#clearPoints();
         this.#renderMain();
         break;
-      case UpdateType.MAJOR:
-        this.#clearPoints();
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderMain();
         break;
     }
@@ -117,6 +130,10 @@ export default class RoutePointListPresenter {
     render(this.#noPointComponent, this.#tripEvents);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripEvents);
+  }
+
   #renderAllPoints(){
     render(this.#pointListComponent, this.#tripEvents);
 
@@ -133,15 +150,21 @@ export default class RoutePointListPresenter {
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
-    pointPresenter.init(point);
+    pointPresenter.init(point, this.offers, this.destinations);
     this.#pointPresenters.set(point.id,pointPresenter);
   }
 
   #renderMain (){
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoints();
       return;
     }
+
     this.#renderSort();
     this.#renderAllPoints();
   }

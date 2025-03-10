@@ -42,14 +42,14 @@ function createSectionOffers(point, offers){
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-      ${givenOffer?.options.map((o) => createOfferTemplate(o, point)).join('')}
+      ${givenOffer?.offers.map((o) => createOfferTemplate(o, point)).join('')}
     </div>
   </section>`;
 }
 
 function createSectionDestinations(point, destinations){
   const givenDestination = getDestinationGivenPointType(point, destinations);
-  if(!givenDestination?.description?.trim?.()?.length){
+  if(!givenDestination?.description.trim?.()?.length){
     return '';
   }
   let givenPictures = '';
@@ -57,7 +57,7 @@ function createSectionDestinations(point, destinations){
     givenPictures = `
       <div class="event__photos-container">
         <div class="event__photos-tape">
-        ${givenDestination?.pictures.map((p) => `<img class="event__photo" src=${p} alt="Event photo">`)}
+        ${givenDestination?.pictures?.map((d) => `<img class="event__photo" src=${d.src} alt="${d.description}">`)}
         </div>
       </div>`;
   }

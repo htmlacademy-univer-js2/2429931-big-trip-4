@@ -42,6 +42,11 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, tripControls);
-filterPresenter.init();
+// render(newPointButtonComponent, tripControls);
+// filterPresenter.init();
 mainPresenter.init();
+pointModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripControls);
+    filterPresenter.init();
+  });
