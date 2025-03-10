@@ -35,7 +35,7 @@ export default class PointPresenter{
       point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onSubmitClick: this.#replaceEditOnPoint,
+      onSubmitClick: this.#onHanleSubmitClick,
       onBtnRollClick: this.#replaceEditOnPoint
     });
 
@@ -69,6 +69,11 @@ export default class PointPresenter{
     remove(this.#pointItemComponent);
     remove(this.#editFormComponent);
   }
+
+  #onHanleSubmitClick = (point) => {
+    this.#handleDataChange(point);
+    this.#replaceEditOnPoint();
+  };
 
   #onHandleFavoriteClick = () => {
     this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});

@@ -177,8 +177,13 @@ export default class EditFormView extends AbstractStatefulView{
     this.element.querySelector('[name=event-start-time]').addEventListener('input', this.#timeStartInputHandler);
     this.element.querySelector('[name=event-end-time]').addEventListener('input', this.#timeEndInputHandler);
 
-    this.element.querySelector('.event__save-btn').addEventListener('submit', this.#onSubmitClick);
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#onSubmitClick(EditFormView.parseStateToPoint(this._state));
+  };
 
   #timeStartInputHandler = (evt) => {
     evt.preventDefault();
