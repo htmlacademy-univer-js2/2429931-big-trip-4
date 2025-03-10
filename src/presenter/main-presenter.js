@@ -3,6 +3,7 @@ import RoutePointListView from '../view/route-point-list-view.js';
 import { render } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import { UserAction, UpdateType} from '../const.js';
+import NewPointPresenter from './new-point-presenter.js';
 
 export default class RoutePointListPresenter {
   #pointModel = null;
@@ -16,12 +17,18 @@ export default class RoutePointListPresenter {
   #destinations = null;
 
   #pointPresenters = new Map();
+  #newPointPresenter = null;
 
-  constructor({pointModel, tripEvents}){
+  constructor({pointModel, tripEvents, onNewPointDestroy}){
     this.#pointModel = pointModel;
     this.#tripEvents = tripEvents;
 
     this.#pointModel.addObserver(this.#handleModelEvent);
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy,
+    });
   }
 
   get points(){
@@ -34,6 +41,10 @@ export default class RoutePointListPresenter {
     this.#destinations = this.#pointModel.destinations;
 
     this.#renderMain();
+  }
+
+  createPoint(){
+    this.#newPointPresenter.init(this.#pointModel.offers, this.#pointModel.destinations);
   }
 
   #clearPoints(){
@@ -69,10 +80,6 @@ export default class RoutePointListPresenter {
         this.#pointModel.deletePoint(updateType, update);
         break;
     }
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
   };
 
   #handleModeChange = () => {

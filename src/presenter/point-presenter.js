@@ -38,7 +38,7 @@ export default class PointPresenter{
       offers: this.#offers,
       onSubmitClick: this.#hanleSubmitClick,
       onBtnRollClick: this.#replaceEditOnPoint,
-      onDeleteClick: this.#onHandleDeleteClick
+      onDeleteClick: this.#handleDeleteClick
     });
 
     this.#pointItemComponent = new RoutePointView({
@@ -72,7 +72,7 @@ export default class PointPresenter{
     remove(this.#editFormComponent);
   }
 
-  #onHandleDeleteClick = (point) => {
+  #handleDeleteClick = (point) => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
@@ -93,13 +93,12 @@ export default class PointPresenter{
   #handleFavoriteClick = () => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite});
-    // this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
   #onEscKeydown = (event) => {
-    if (event.key === 'Escape' || event.keyCode === 27) {
+    if (event.key === 'Escape' || event.keyCode === 27 || event.key === 'Esc') {
       event.preventDefault();
       this.#editFormComponent.reset(this.#point);
       this.#replaceEditOnPoint();
