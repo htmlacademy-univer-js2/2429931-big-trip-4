@@ -6,11 +6,18 @@ export default class PointModel extends Observable{
   #offers = null;
   #destinations = null;
 
-  constructor() {
+  #pointsApiService;
+
+  constructor({pointsApiService}) {
     super();
     this.#points = mockRoutePoints;
     this.#offers = mockOffers;
     this.#destinations = mockDestinations;
+
+    this.#pointsApiService = pointsApiService;
+    this.#pointsApiService.points.then((point) => {
+      console.log(point)
+    });
   }
 
   get points(){
