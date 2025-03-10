@@ -37,7 +37,8 @@ export default class PointPresenter{
       destinations: this.#destinations,
       offers: this.#offers,
       onSubmitClick: this.#hanleSubmitClick,
-      onBtnRollClick: this.#replaceEditOnPoint
+      onBtnRollClick: this.#replaceEditOnPoint,
+      onDeleteClick: this.#onHandleDeleteClick
     });
 
     this.#pointItemComponent = new RoutePointView({
@@ -45,7 +46,7 @@ export default class PointPresenter{
       destinations: this.#destinations,
       offers: this.#offers,
       onBtnRollClick: this.#replacePointOnEdit,
-      onFavoriteClick: this.#handleFavoriteClick
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     if (prevEditFormComponent === null || prevPointItemComponent === null){
@@ -71,12 +72,20 @@ export default class PointPresenter{
     remove(this.#editFormComponent);
   }
 
+  #onHandleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
   #hanleSubmitClick = (update) => {
     // const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       // isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       update);
     this.#replaceEditOnPoint();
   };
@@ -84,7 +93,7 @@ export default class PointPresenter{
   #handleFavoriteClick = () => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#point, isFavorite: !this.#point.isFavorite});
     // this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };

@@ -134,17 +134,19 @@ export default class EditFormView extends AbstractStatefulView{
 
   #onSubmitClick = null;
   #onBtnRollClick = null;
+  #handleDeleteClick = null;
 
   #datepicker = null;
   #isSave = null;
 
-  constructor({point, offers, destinations, onSubmitClick, onBtnRollClick}){
+  constructor({point, offers, destinations, onSubmitClick, onBtnRollClick, onDeleteClick}){
     super();
     this._setState(EditFormView.parsePointToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#onSubmitClick = onSubmitClick;
     this.#onBtnRollClick = onBtnRollClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -171,13 +173,16 @@ export default class EditFormView extends AbstractStatefulView{
   _restoreHandlers(){
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollButtonHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersHandler);
+    if(this.element.querySelector('.event__available-offers') !== null){
+      this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersHandler);
+    }
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
     this.element.querySelector('[name=event-start-time]').addEventListener('input', this.#timeStartInputHandler);
     this.element.querySelector('[name=event-end-time]').addEventListener('input', this.#timeEndInputHandler);
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
   }
 
   #offersHandler = (evt) => {
@@ -197,6 +202,11 @@ export default class EditFormView extends AbstractStatefulView{
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#onSubmitClick(EditFormView.parseStateToPoint(this._state));
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToPoint(this._state));
   };
 
   #timeStartInputHandler = (evt) => {
