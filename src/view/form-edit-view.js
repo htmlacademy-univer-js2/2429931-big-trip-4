@@ -3,7 +3,6 @@ import { FORMAT_DATE, TYPES_POINT } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import {nanoid} from 'nanoid';
 import he from 'he';
 
 const BLANK_POINT = {
@@ -11,8 +10,7 @@ const BLANK_POINT = {
   type: 'flight',
   dateFrom: '2023-07-18T20:20:13.375Z',
   dateTo: '2023-07-18T21:40:13.375Z',
-  destination: 1,
-  id: nanoid(),
+  destination: '2786bff2-10cf-4a48-99ec-848254cace99',
   offers: [],
   isFavorite: false
 };
