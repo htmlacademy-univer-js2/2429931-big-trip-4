@@ -38,10 +38,8 @@ export default class PointApiService extends ApiService {
 
   #adaptToServer(point) {
     const adaptedTripPoint = {...point,
-      // 'date_from': (point.dateFrom) ? new Date(point.dateFrom).toISOString() : new Date().toISOString,
-      // 'date_to': (point.dateFrom) ? new Date(point.dateTo).toISOString() : new Date().toISOString,
-      'date_from': (point.dateFrom instanceof Date) ? point.dateFrom.toISOString() : null,
-      'date_to': (point.dateTo instanceof Date) ? point.dateTo.toISOString() : null,
+      'date_from': (point.dateFrom) ? new Date(point.dateFrom).toISOString() : new Date().toISOString,
+      'date_to': (point.dateTo) ? new Date(point.dateTo).toISOString() : new Date().toISOString,
       'base_price': Number(point.basePrice),
       'is_favorite': point.isFavorite,
     };
@@ -49,7 +47,6 @@ export default class PointApiService extends ApiService {
     delete adaptedTripPoint.dateFrom;
     delete adaptedTripPoint.dateTo;
     delete adaptedTripPoint.basePrice;
-    delete adaptedTripPoint.offers;
     delete adaptedTripPoint.isFavorite;
     return adaptedTripPoint;
   }

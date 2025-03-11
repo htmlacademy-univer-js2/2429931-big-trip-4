@@ -35,7 +35,7 @@ function createOfferTemplate(option, point){
 
 function createSectionOffers(point, offers){
   const givenOffer = getOfferGivenPointType(point, offers);
-  if(givenOffer === undefined){
+  if(givenOffer === undefined || givenOffer.offers.length === 0){
     return '';
   }
   return`
@@ -198,7 +198,7 @@ export default class EditFormView extends AbstractStatefulView{
 
   #offersHandler = (evt) => {
     evt.preventDefault();
-    const clickedOfferId = Number(evt.target.name.split('-').at(-1));
+    const clickedOfferId = evt.target.name.slice(20);
     const newOffersIds = this._state.offers;
     if (newOffersIds.includes(clickedOfferId)) {
       newOffersIds.splice(newOffersIds.indexOf(clickedOfferId), 1);

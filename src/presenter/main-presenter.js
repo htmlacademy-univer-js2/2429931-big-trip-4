@@ -85,7 +85,7 @@ export default class RoutePointListPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenters.get(data.id).init(data);
+        this.#pointPresenters.get(data.id).init(data, this.offers, this.destinations);
         break;
       case UpdateType.MINOR:
         this.#clearPoints();
@@ -154,8 +154,8 @@ export default class RoutePointListPresenter {
     this.#pointPresenters.set(point.id,pointPresenter);
   }
 
-  #renderMain (){
-    if (this.#isLoading) {
+  #renderMain(){
+    if (this.#isLoading || this.offers.length === 0 || this.destinations.length === 0) {
       this.#renderLoading();
       return;
     }
