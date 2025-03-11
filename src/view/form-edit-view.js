@@ -3,15 +3,14 @@ import { FORMAT_DATE, TYPES_POINT } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import {nanoid} from 'nanoid';
+import he from 'he';
 
 const BLANK_POINT = {
   basePrice: 1,
   type: 'flight',
   dateFrom: '2023-07-18T20:20:13.375Z',
   dateTo: '2023-07-18T21:40:13.375Z',
-  destination: 1,
-  id: nanoid(),
+  destination: '2786bff2-10cf-4a48-99ec-848254cace99',
   offers: [],
   isFavorite: false
 };
@@ -34,21 +33,21 @@ function createOfferTemplate(option, point){
 
 function createSectionOffers(point, offers){
   const givenOffer = getOfferGivenPointType(point, offers);
-  if(givenOffer === undefined){
+  if(givenOffer === undefined || givenOffer.offers.length === 0){
     return '';
   }
   return`
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
-      ${givenOffer?.options.map((o) => createOfferTemplate(o, point)).join('')}
+      ${givenOffer?.offers.map((o) => createOfferTemplate(o, point)).join('')}
     </div>
   </section>`;
 }
 
 function createSectionDestinations(point, destinations){
   const givenDestination = getDestinationGivenPointType(point, destinations);
-  if(!givenDestination?.description?.trim?.()?.length){
+  if(!givenDestination?.description.trim?.()?.length){
     return '';
   }
   let givenPictures = '';
@@ -56,14 +55,14 @@ function createSectionDestinations(point, destinations){
     givenPictures = `
       <div class="event__photos-container">
         <div class="event__photos-tape">
-        ${givenDestination?.pictures.map((p) => `<img class="event__photo" src=${p} alt="Event photo">`)}
+        ${givenDestination?.pictures?.map((d) => `<img class="event__photo" src=${d.src} alt="${d.description}">`)}
         </div>
       </div>`;
   }
   return`
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${givenDestination?.description}</p>
+      <p class="event__destination-description">${he.encode(givenDestination?.description)}</p>
       ${givenPictures}
     </section>
   `;
@@ -197,7 +196,7 @@ export default class EditFormView extends AbstractStatefulView{
 
   #offersHandler = (evt) => {
     evt.preventDefault();
-    const clickedOfferId = Number(evt.target.name.split('-').at(-1));
+    const clickedOfferId = evt.target.name.slice(20);
     const newOffersIds = this._state.offers;
     if (newOffersIds.includes(clickedOfferId)) {
       newOffersIds.splice(newOffersIds.indexOf(clickedOfferId), 1);
