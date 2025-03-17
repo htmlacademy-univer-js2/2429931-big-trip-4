@@ -1,6 +1,7 @@
 import { getDestinationGivenPointType, getOfferGivenPointType, getFormatDate, getDiffDate} from '../utils/utils';
 import { FORMAT_DATE } from '../const';
 import AbstractView from '../framework/view/abstract-view.js';
+import he from 'he';
 
 function createOfferList(option, point){
   const {id,price, title} = option;
@@ -28,7 +29,7 @@ function createRoutePoint(point, destinations, offers) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${getDestinationGivenPointType(point, destinations).name}</h3>
+        <h3 class="event__title">${type} ${getDestinationGivenPointType(point, destinations)?.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${dateFrom}">${startTime}</time>
@@ -38,11 +39,11 @@ function createRoutePoint(point, destinations, offers) {
           <p class="event__duration">${getDiffDate(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(basePrice.toString())}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-           ${getOfferGivenPointType(point, offers) !== undefined ? getOfferGivenPointType(point, offers)?.options.map((o) => createOfferList(o, point)).join('') : ''}
+           ${getOfferGivenPointType(point, offers) !== undefined ? getOfferGivenPointType(point, offers)?.offers.map((o) => createOfferList(o, point)).join('') : ''}
         </ul>
         <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>

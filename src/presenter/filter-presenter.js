@@ -1,9 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import FilterView from '../view/filter-view.js';
 import { FilterType, UpdateType } from '../const.js';
-// import { filter } from '../utils/utils.js';
-// import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-// import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -55,6 +52,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(UpdateType.MINOR, filterType);
   };
 }

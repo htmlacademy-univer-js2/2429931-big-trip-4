@@ -26,16 +26,18 @@ export default class PointPresenter{
     this.#handleModeChange = onModeChange;
   }
 
-  init(point){
+  init(point, offers, destinations){
     this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
 
     const prevEditFormComponent = this.#editFormComponent;
     const prevPointItemComponent = this.#pointItemComponent;
 
     this.#editFormComponent = new EditFormView({
       point,
-      destinations: this.#destinations,
-      offers: this.#offers,
+      destinations,
+      offers,
       onSubmitClick: this.#hanleSubmitClick,
       onBtnRollClick: this.#replaceEditOnPoint,
       onDeleteClick: this.#handleDeleteClick
@@ -43,8 +45,8 @@ export default class PointPresenter{
 
     this.#pointItemComponent = new RoutePointView({
       point,
-      destinations: this.#destinations,
-      offers: this.#offers,
+      destinations,
+      offers,
       onBtnRollClick: this.#replacePointOnEdit,
       onFavoriteClick: this.#handleFavoriteClick,
     });
